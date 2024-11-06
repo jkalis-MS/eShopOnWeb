@@ -43,6 +43,8 @@ else{
 }
 
 builder.Services.AddCookieSettings();
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddServiceProfiler();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
