@@ -27,6 +27,8 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="Microsoft.ApplicationInsights.Profiler.AspNetCore" />
 
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
   </ItemGroup>

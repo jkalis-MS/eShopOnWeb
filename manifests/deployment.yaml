@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshoppublicapi
+  labels:
+    app: eshoppublicapi
+    kubernetes.azure.com/generator: draft
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eshoppublicapi
+  template:
+    metadata:
+      labels:
+        app: eshoppublicapi
+    spec:
+      containers:
+        - name: eshoppublicapi
+          image: eshopaksacr.azurecr.io/publicapi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+            - name: UseOnlyInMemoryDatabase
+              value: "true"
+            - name: ApplicationInsights__ConnectionString
+              value: "InstrumentationKey=11c4c01b-b648-43b1-9561-41f47c032ef8;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=5a9d38d6-0411-4605-9f26-46f478bdf9d2"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshopwebmvc
+  labels:
+    app: eshopwebmvc
+    kubernetes.azure.com/generator: draft
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eshopwebmvc
+  template:
+    metadata:
+      labels:
+        app: eshopwebmvc
+    spec:
+      containers:             
+        - name: eshopwebmvc
+          image: eshopaksacr.azurecr.io/web:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+            - name: UseOnlyInMemoryDatabase
+              value: "true"
+            - name: ApplicationInsights__ConnectionString
+              value: "InstrumentationKey=11c4c01b-b648-43b1-9561-41f47c032ef8;IngestionEndpoint=https://westus-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westus.livediagnostics.monitor.azure.com/;ApplicationId=5a9d38d6-0411-4605-9f26-46f478bdf9d2"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+
+    
