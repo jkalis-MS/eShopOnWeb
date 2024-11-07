@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: eshoppublicapi
-          image: eshopaksacr.azurecr.io/publicapi:latest
+          image: carlsonrmcr1024.azurecr.io/publicapi:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -57,7 +57,7 @@ spec:
     spec:
       containers:             
         - name: eshopwebmvc
-          image: eshopaksacr.azurecr.io/web:latest
+          image: carlsonrmcr1024.azurecr.io/web:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

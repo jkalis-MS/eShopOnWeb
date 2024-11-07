@@ -23,32 +23,36 @@ public class CatalogItemGetByIdEndpoint : IEndpoint<IResult, GetByIdCatalogItemR
     public void AddRoute(IEndpointRouteBuilder app)
     {
         app.MapGet("api/catalog-items/{catalogItemId}",
-            async (int catalogItemId, IRepository<CatalogItem> itemRepository) =>
+            (int catalogItemId, IRepository<CatalogItem> itemRepository) =>
             {
-                return await HandleAsync(new GetByIdCatalogItemRequest(catalogItemId), itemRepository);
+                return HandleAsync(new GetByIdCatalogItemRequest(catalogItemId), itemRepository);
             })
             .Produces<GetByIdCatalogItemResponse>()
             .WithTags("CatalogItemEndpoints");
     }
 
-    public async Task<IResult> HandleAsync(GetByIdCatalogItemRequest request, IRepository<CatalogItem> itemRepository)
+    public Task<IResult> HandleAsync(GetByIdCatalogItemRequest request, IRepository<CatalogItem> itemRepository)
     {
         var response = new GetByIdCatalogItemResponse(request.CorrelationId());
 
-        var item = await itemRepository.GetByIdAsync(request.CatalogItemId);
-        if (item is null)
-            return Results.NotFound();
-
-        response.CatalogItem = new CatalogItemDto
+        var itemTask = itemRepository.GetByIdAsync(request.CatalogItemId);
+        return itemTask.ContinueWith(task =>
         {
-            Id = item.Id,
-            CatalogBrandId = item.CatalogBrandId,
-            CatalogTypeId = item.CatalogTypeId,
-            Description = item.Description,
-            Name = item.Name,
-            PictureUri = _uriComposer.ComposePicUri(item.PictureUri),
-            Price = item.Price
-        };
-        return Results.Ok(response);
+            var item = task.Result;
+            if (item is null)
+                return Results.NotFound();
+            
+            response.CatalogItem = new CatalogItemDto
+            {
+                Id = item.Id,
+                CatalogBrandId = item.CatalogBrandId,
+                CatalogTypeId = item.CatalogTypeId,
+                Description = item.Description,
+                Name = item.Name,
+                PictureUri = _uriComposer.ComposePicUri(item.PictureUri),
+                Price = item.Price
+            };
+            return Results.Ok(response);
+        });
     }
 }
