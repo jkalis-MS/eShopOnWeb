@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshoppublicapi
+  labels:
+    app: eshoppublicapi
+    kubernetes.azure.com/generator: draft
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eshoppublicapi
+  template:
+    metadata:
+      labels:
+        app: eshoppublicapi
+    spec:
+      containers:
+        - name: eshoppublicapi
+          image: carlsonrmcr1024.azurecr.io/eshop/eshoppublicapi:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+            - name: UseOnlyInMemoryDatabase
+              value: "true"
+            - name: ApplicationInsights__ConnectionString
+              value: "InstrumentationKey=c88bd8c8-2a6b-4e85-912e-be3e90e8e6cb;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=32d0dd25-c50c-49a9-802c-0817e82b43f6"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eshopwebmvc
+  labels:
+    app: eshopwebmvc
+    kubernetes.azure.com/generator: draft
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eshopwebmvc
+  template:
+    metadata:
+      labels:
+        app: eshopwebmvc
+    spec:
+      containers:             
+        - name: eshopwebmvc
+          image: carlsonrmcr1024.azurecr.io/eshop/eshopwebmvc:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Docker"
+            - name: UseOnlyInMemoryDatabase
+              value: "true"
+            - name: ApplicationInsights__ConnectionString
+              value: "InstrumentationKey=c88bd8c8-2a6b-4e85-912e-be3e90e8e6cb;IngestionEndpoint=https://eastus-8.in.applicationinsights.azure.com/;LiveEndpoint=https://eastus.livediagnostics.monitor.azure.com/;ApplicationId=32d0dd25-c50c-49a9-802c-0817e82b43f6"
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+
+    
